@@ -1,0 +1,20 @@
+# Path A: Route with internal CA issuer
+# Replace the host with your chosen custom domain
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: web-app
+  namespace: custom-domain-demo
+  annotations:
+    cert-manager.io/issuer-name: ca-issuer
+    cert-manager.io/issuer-kind: ClusterIssuer
+spec:
+  host: orders.acme-corp.internal
+  to:
+    kind: Service
+    name: web-app
+  port:
+    targetPort: 8080
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

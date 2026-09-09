@@ -1,0 +1,20 @@
+# Path B: Route with Let's Encrypt issuer
+# Replace the host with your real domain
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: web-app
+  namespace: custom-domain-demo
+  annotations:
+    cert-manager.io/issuer-name: letsencrypt-prod
+    cert-manager.io/issuer-kind: ClusterIssuer
+spec:
+  host: orders.acme-corp.com
+  to:
+    kind: Service
+    name: web-app
+  port:
+    targetPort: 8080
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
