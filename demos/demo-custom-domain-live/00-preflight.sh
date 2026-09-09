@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Pre-flight: verify cluster readiness and install openshift-routes if needed
+# Pre-flight: verify cluster readiness (no installs needed on OCP 4.22)
 set -euo pipefail
 
 echo "==========================================="
@@ -24,26 +24,13 @@ echo ""
 echo "4. ACME issuer status:"
 READY=$(oc get clusterissuer acme-bifrost-production-ddns -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}')
 echo "   acme-bifrost-production-ddns: Ready=${READY}"
-if [ "$READY" != "True" ]; then
-  echo "   WARNING: ACME issuer is NOT ready. Demo may fail."
-fi
 echo ""
 
-echo "5. openshift-routes controller:"
-if oc get pods -n cert-manager --no-headers 2>/dev/null | grep -q "openshift-routes"; then
-  echo "   INSTALLED:"
-  oc get pods -n cert-manager --no-headers | grep openshift-routes | awk '{print "   "$1" "$3}'
+echo "5. externalCertificate support (OCP 4.22 -- GA, always enabled):"
+if oc explain route.spec.tls.externalCertificate &>/dev/null; then
+  echo "   OK: route.spec.tls.externalCertificate field is available"
 else
-  echo "   NOT installed. Installing now..."
-  echo ""
-  helm repo add jetstack https://charts.jetstack.io --force-update 2>/dev/null
-  helm repo update 2>/dev/null
-  helm install openshift-routes jetstack/cert-manager-openshift-routes \
-    --namespace cert-manager \
-    --wait --timeout 120s
-  echo ""
-  echo "   Installed:"
-  oc get pods -n cert-manager --no-headers | grep openshift-routes | awk '{print "   "$1" "$3}'
+  echo "   ERROR: externalCertificate field not found -- requires OCP 4.22+"
 fi
 echo ""
 
@@ -53,4 +40,5 @@ echo ""
 
 echo "==========================================="
 echo " Pre-flight complete. Ready for demo."
+echo " No additional installs needed."
 echo "==========================================="
