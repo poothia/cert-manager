@@ -123,11 +123,13 @@ X509v3 Subject Alternative Name:
 
 ```bash
 # Show the renewal schedule
-oc get certificate cert-manager-ingress-cert -n openshift-ingress -o wide
+oc get certificate cert-manager-ingress-cert -n openshift-ingress \
+  -o jsonpath='Expires: {.status.notAfter}  Renews at: {.status.renewalTime}{"\n"}'
 ```
 
-> "See that RENEWAL column? cert-manager will request a fresh cert 15 days
-> before expiry. No tickets, no calendar reminders, no 3 AM pages."
+> "See that? The cert expires December 5th, and cert-manager will
+> automatically request a fresh one on November 20th -- 15 days before
+> expiry. No tickets, no calendar reminders, no 3 AM pages."
 
 ### Step 4: Show the issuer behind it
 

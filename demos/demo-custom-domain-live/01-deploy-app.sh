@@ -55,9 +55,9 @@ oc get secret cert-manager-ingress-cert -n openshift-ingress \
   -o jsonpath='{.data.tls\.crt}' | base64 -d \
   | openssl x509 -noout -subject -issuer -dates | sed 's/^/  /'
 echo ""
-echo "  Renewal:"
+echo "  Renewal schedule:"
 oc get certificate cert-manager-ingress-cert -n openshift-ingress \
-  -o jsonpath='  Renews at: {.status.renewalTime}{"\n"}'
+  -o jsonpath='  Expires:  {.status.notAfter}{"\n"}  Renews at: {.status.renewalTime}{"\n"}'
 echo ""
 
 echo "==========================================="
