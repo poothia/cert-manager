@@ -1,0 +1,21 @@
+# Lab 1 - Step 4: Issue a leaf certificate
+# This certificate is signed by the CA ClusterIssuer.
+# cert-manager stores the cert + key in the Secret "my-app-tls" in the default namespace.
+#
+# NOTE: Replace the dnsNames value with your actual cluster apps domain:
+#       <app>.<namespace>.apps.<cluster-domain>
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: my-app-cert
+  namespace: default
+spec:
+  secretName: my-app-tls
+  duration: 2160h            # 90 days
+  renewBefore: 720h          # Renew 30 days before expiry
+  dnsNames:
+    - my-app.apps.cluster.example.com
+  issuerRef:
+    name: ca-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io

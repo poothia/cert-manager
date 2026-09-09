@@ -1,0 +1,9 @@
+# Lab 1 - Step 1: Create a SelfSigned ClusterIssuer
+# This is the simplest issuer type. It signs certificates with their own private key.
+# We use it here to bootstrap a Root CA certificate.
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: selfsigned-issuer
+spec:
+  selfSigned: {}

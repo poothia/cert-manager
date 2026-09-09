@@ -1,0 +1,43 @@
+# Demo 2: Let's Encrypt Staging ClusterIssuer with DNS-01 solver
+#
+# IMPORTANT: This uses the Let's Encrypt STAGING endpoint.
+# Staging certs are NOT trusted by browsers but are free of rate limits.
+# Always test with staging before switching to production.
+#
+# NOTE: Replace email and DNS solver config with your actual values.
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+spec:
+  acme:
+    # Let's Encrypt staging endpoint (use for testing)
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: admin@example.com       # Replace with your email
+    privateKeySecretRef:
+      name: letsencrypt-staging-account-key
+    solvers:
+      # DNS-01 solver using Cloudflare
+      # Supports wildcard certificates (*.example.com)
+      - dns01:
+          cloudflare:
+            apiTokenSecretRef:
+              name: cloudflare-api-token
+              key: api-token
+      # ---
+      # Alternative: AWS Route53 solver (uncomment and configure if using AWS)
+      # - dns01:
+      #     route53:
+      #       region: us-east-1
+      #       hostedZoneID: Z1234567890  # Your Route53 hosted zone ID
+      #       # Uses IRSA or instance profile for authentication
+      # ---
+      # Alternative: RFC2136 solver for IdM/BIND (uncomment and configure)
+      # - dns01:
+      #     rfc2136:
+      #       nameserver: idm.example.com:53
+      #       tsigKeyName: cert-manager-key
+      #       tsigAlgorithm: HMACSHA512
+      #       tsigSecretSecretRef:
+      #         name: tsig-secret
+      #         key: tsig-secret-key

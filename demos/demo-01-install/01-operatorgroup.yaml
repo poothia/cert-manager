@@ -1,0 +1,8 @@
+# Demo 1 - Step 2: Create an OperatorGroup for AllNamespaces mode
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: cert-manager-operator
+  namespace: cert-manager-operator
+spec:
+  targetNamespaces: []

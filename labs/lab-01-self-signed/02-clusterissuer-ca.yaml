@@ -1,0 +1,10 @@
+# Lab 1 - Step 3: Create a CA ClusterIssuer
+# This issuer uses the Root CA key (stored in root-ca-secret) to sign leaf certificates.
+# Because it is a ClusterIssuer, any namespace in the cluster can request certs from it.
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: ca-issuer
+spec:
+  ca:
+    secretName: root-ca-secret

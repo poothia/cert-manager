@@ -1,0 +1,21 @@
+# Lab 1 - Step 2: Create a Root CA Certificate
+# This certificate is self-signed (via the selfsigned-issuer) and marked as a CA (isCA: true).
+# cert-manager stores the resulting CA cert + key in the Secret "root-ca-secret".
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: root-ca
+  namespace: cert-manager
+spec:
+  isCA: true
+  secretName: root-ca-secret
+  commonName: "Workshop Root CA"
+  duration: 87600h          # 10 years
+  renewBefore: 8760h        # Renew 1 year before expiry
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: selfsigned-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io

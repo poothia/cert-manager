@@ -1,0 +1,31 @@
+# Lab 2 - Step 1: Deploy a sample HTTPD application
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: secure-app
+  namespace: workshop-demo
+  labels:
+    app: secure-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: secure-app
+  template:
+    metadata:
+      labels:
+        app: secure-app
+    spec:
+      containers:
+        - name: httpd
+          image: registry.access.redhat.com/ubi9/httpd-24:latest
+          ports:
+            - containerPort: 8080
+              name: http
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi

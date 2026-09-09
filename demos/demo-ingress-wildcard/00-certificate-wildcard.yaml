@@ -1,0 +1,25 @@
+# Demo 3 (Advanced): Wildcard certificate for the default IngressController
+#
+# This certificate covers *.apps.<cluster-domain>, allowing ALL routes
+# to automatically get a valid TLS certificate.
+#
+# NOTE: Replace the dnsNames and secretName to match your cluster.
+#       This requires a working ACME DNS-01 issuer (for wildcard support)
+#       or a CA issuer (for internal use).
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: default-ingress-cert
+  namespace: openshift-ingress
+spec:
+  secretName: router-certs-custom
+  duration: 2160h
+  renewBefore: 720h
+  dnsNames:
+    - "*.apps.cluster.example.com"
+  issuerRef:
+    # For production with public trust, use letsencrypt-prod (requires DNS-01)
+    # For internal/lab environments, ca-issuer works fine
+    name: ca-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io

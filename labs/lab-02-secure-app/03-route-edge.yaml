@@ -1,0 +1,22 @@
+# Lab 2 - Step 4: Create an edge-terminated Route using the cert-manager certificate
+#
+# Edge termination: the OpenShift router terminates TLS using the certificate
+# from the Secret referenced below, then forwards plain HTTP to the pod.
+#
+# NOTE: Replace the host value with your actual cluster apps domain.
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: secure-app
+  namespace: workshop-demo
+spec:
+  host: secure-app-workshop-demo.apps.cluster.example.com
+  to:
+    kind: Service
+    name: secure-app
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

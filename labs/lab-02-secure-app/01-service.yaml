@@ -1,0 +1,16 @@
+# Lab 2 - Step 2: Create a Service for the HTTPD application
+apiVersion: v1
+kind: Service
+metadata:
+  name: secure-app
+  namespace: workshop-demo
+  labels:
+    app: secure-app
+spec:
+  selector:
+    app: secure-app
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+      protocol: TCP

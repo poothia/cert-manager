@@ -1,0 +1,20 @@
+# Demo 2: Request a certificate from Let's Encrypt staging
+#
+# NOTE: Replace the dnsNames with real hostnames in your domain.
+#       The DNS-01 solver will create a TXT record in your DNS zone to prove ownership.
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: acme-demo-cert
+  namespace: default
+spec:
+  secretName: acme-demo-tls
+  duration: 2160h              # 90 days (Let's Encrypt max)
+  renewBefore: 720h            # Renew 30 days before expiry
+  dnsNames:
+    - demo.example.com
+    - "*.demo.example.com"     # Wildcard -- requires DNS-01 solver
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+    group: cert-manager.io

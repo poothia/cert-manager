@@ -1,0 +1,19 @@
+# Lab 2 - Step 3: Request a TLS certificate for the application
+#
+# NOTE: Replace the dnsNames value with your actual Route hostname:
+#       secure-app-workshop-demo.apps.<cluster-domain>
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: secure-app-cert
+  namespace: workshop-demo
+spec:
+  secretName: secure-app-tls
+  duration: 2160h            # 90 days
+  renewBefore: 720h          # Renew 30 days before expiry
+  dnsNames:
+    - secure-app-workshop-demo.apps.cluster.example.com
+  issuerRef:
+    name: ca-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io

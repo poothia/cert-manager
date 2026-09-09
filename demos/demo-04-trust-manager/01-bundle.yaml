@@ -1,0 +1,20 @@
+# Demo 4 - Step 2: Create a Bundle to distribute the workshop CA
+#
+# This Bundle reads the CA cert from root-ca-secret (created in Lab 1)
+# and creates a ConfigMap called "workshop-ca-bundle" in every namespace
+# labeled with trust.cert-manager.io/inject: "true".
+apiVersion: trust.cert-manager.io/v1alpha1
+kind: Bundle
+metadata:
+  name: workshop-ca-bundle
+spec:
+  sources:
+    - secret:
+        name: root-ca-secret
+        key: ca.crt
+  target:
+    configMap:
+      key: ca-bundle.crt
+    namespaceSelector:
+      matchLabels:
+        trust.cert-manager.io/inject: "true"

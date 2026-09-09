@@ -1,0 +1,29 @@
+# Lab 3: Annotate a Route for automatic TLS via the openshift-routes controller
+#
+# When the openshift-routes controller is installed, adding these annotations
+# to a Route triggers cert-manager to automatically issue a certificate and
+# populate the route.spec.tls fields.
+#
+# NOTE: Replace the host value with your actual cluster apps domain.
+#       The openshift-routes controller must be installed first (see Demo 3).
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: auto-tls-app
+  namespace: workshop-demo
+  annotations:
+    cert-manager.io/issuer-name: ca-issuer
+    cert-manager.io/issuer-kind: ClusterIssuer
+    cert-manager.io/duration: "2160h"
+    cert-manager.io/renew-before: "720h"
+spec:
+  host: auto-tls-app-workshop-demo.apps.cluster.example.com
+  to:
+    kind: Service
+    name: secure-app
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
